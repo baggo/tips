@@ -4,5 +4,5 @@
 
 ## Smallest Infinite Loop
 ```js
-for(;;){}
+for(;;);
 ```
