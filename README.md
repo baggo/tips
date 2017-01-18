@@ -45,7 +45,7 @@ while(condition);
 When normally writing code, you'd do something like this:
 
 ```js
-if (true) {
+if (condition) {
   foo()
   bar()
   baz()
@@ -55,7 +55,7 @@ if (true) {
 These can be changed to a "sequence expression":
 
 ```js
-if(true)foo(),bar(),baz() 
+if(condition)foo(),bar(),baz() 
 ```
 
 ## If statements to conditional expressions
