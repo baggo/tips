@@ -1,93 +1,134 @@
 # tips
+> Tips, hacks and guidelines for optimizing JavaScript modules
 
-In general, your goal is to convert as many [statements](https://github.com/estree/estree/blob/master/es5.md#statements) as you can into [expressions](https://github.com/estree/estree/blob/master/es5.md#expressions).
+Above all else, `baggo` modules should prioritize being fast, compact and simple. Therefore, single variable names and minimal whitespace are  acceptable when writing `baggo`-style code.
 
-## Reuse Old Variables
+Regardless, whitespace has been included in some of the following examples for clarity.
 
-Create a few "`var` chains" and tag on extra declarations:
+## Optimizing loops
+A loop is a block of code that is repeated until a specified condition is fulfilled. The three main methods of looping in JavaScript (and other similar languages) are `for` loops, `while` loops and recursion.
 
-```js
-var x=123,y=345,z,a,b
+`while` loops focus primarily on readability, and recursion is slow in JavaScript. Therefore, the _only_ kind of loop you should be concerned with when writing `baggo` modules is the `for` loop.
+
+When writing a loop in which the current iteration index `i` is used, most programmers will write a `for` loop like this:
+
+```javascript
+// for (initial; condition; iteration);
+for (var i = 0; i < array.length; i++) {
+  var item = array[i]
+  // Do stuff with item...
+}
 ```
 
-This way, you don't have to use `var` later on.
+Unless `array.length` is constantly changing, it is preferable to cache it in a variable to avoid unnecessary property lookups.
 
-**Note:** Be careful with scoping.  Use multiple variables to get past conflicts.
+```javascript
+// In this example, `array.length` is only accessed once
+for (var i = 0, max = array.length; i < max; i++) {
+  // ...
+}```
 
-## Smallest Loop
+An even faster and more compact approach would be to loop backwards through the array:
 
-```js
-for(init;condition;body);
+```javascript
+for (var i = array.length; i--;) {
+  // ...
+}
 ```
 
-For infinite loops just leave them empty:
+Other than being fast, this method has an additional perk - if you need to remove elements as you iterate, looping backwards may eliminate the need to implement additional low-level logic to accommodate item removal.
 
-```js
+It's also possible to move all the code between the braces into the final `iteration` expression of the `for` loop if need be. However, note that common keywords and tokens such as `if` and `break` cannot be used in the middle of expressions. For complex logic, use [ternaries and logical operators](#condensing-conditionals) instead.
+
+After moving all the code out of a loop block, you may use a semicolon to convert the resulting empty block into an empty expression:
+
+```javascript
+// Empty block `{}`
+for(;;){}
+
+// ...becomes an "empty expression":
 for(;;);
 ```
 
-## Empty expressions
+The semicolon is required at the end of the parentheses if it is followed by an expression that you wish to keep "out of the loop".
 
-Instead of empty blocks:
+```javascript
+// `return` statement part of `for` loop, will break out of function on first iteration
+for(var r='';...;...)return r
 
-```js
-while (condition) {}
+// `return` occurs after the `for` loop (desired result)
+for(var r ='';...;...);return r
 ```
 
-Create "empty expressions":
+**Note:** Even if an expression in a `for` loop is empty, both semicolons are still required or else the compiler will throw a `SyntaxError`. This is one of the reasons why these kinds of loops struggle with readability.
 
-```js
-while(condition);
+**Another one:** `for(;;)` is the smallest infinite loop possible.
+
+## Chaining variable declarations
+Defining variables in separate declarations can help with readability, but the definitions can also be placed onto one line to save space.
+
+```javascript
+// Sequence of variable declarations
+var i = 0
+var lorem = 'ipsum'
+var foo
+
+// ...becomes a "declaration sequence":
+var i=0,l='ipsum',f
 ```
 
-## Blocks to sequence expressions
+Incidentally, this method fits in naturally into the `initial` expression of `for` loops since keywords like `var` cannot be used in sequence expressions.
 
-When normally writing code, you'd do something like this:
+## Condensing conditionals
+Most `if` statements can be condensed into plain expressions by using ternaries or logical operators, allowing you to use them in `for` loops.
 
-```js
-if (condition) {
-  foo()
-  bar()
-  baz()
-}
-```
-
-These can be changed to a "sequence expression":
-
-```js
-if(condition)foo(),bar(),baz() 
-```
-
-## If statements to conditional expressions
-
-An `if` (with no `else`):
-
-```js
+```javascript
+// Generic `if` statement
 if (condition) {
   consequent()
 }
-```
 
-Can be changed to:
-
-```js
+// ...becomes a "logical expression":
 condition&&consequent()
 ```
 
-And one with `else`:
-
-```js
+```javascript
+// `if`-`else` statement
 if (condition) {
   consequent()
 } else {
   alternate()
 }
-```
 
-Can be changed into a conditional expression:
-
-```js
+// ...becomes a "ternary expression":
 condition?consequent():alternate()
 ```
 
-**Note:** Be wary of return values of the expressions, as they can mess up execution depending where used.
+```javascript
+// `if` statement with multiple expressions
+if (condition) {
+  foo()
+  bar()
+  baz()
+}
+
+// ...becomes a "sequence expression":
+condition&&foo(),bar(),baz()
+```
+
+## Other tips
+
+To fill up an array with values within a for loop, you can use the current iteration index `i` to set values directly instead of using `Array.push`.
+
+```javascript
+var result = []
+var i = value.length
+while (i--)
+  result[i] = FOO
+return result
+
+// ...becomes the following, when compressed:
+for(var r=[],i=v.length;i--;r[i]=FOO);return r
+```
+
+This may or may not impact performance, but it usually just saves some space.
