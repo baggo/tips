@@ -38,7 +38,7 @@ for (var i = array.length; i--;) {
 
 Other than being fast, this method has an additional perk - if you need to remove elements as you iterate, looping backwards may eliminate the need to implement additional low-level logic to accommodate item removal.
 
-It's also possible to move all the code between the braces into the final `iteration` expression of the `for` loop if need be. However, note that common keywords and tokens such as `if` and `break` cannot be used in the middle of expressions. For complex logic, use [ternaries and logical operators](#condensing-conditionals) instead.
+It's also possible to move all the code between the braces into the final `iteration` expression of the `for` loop if need be. However, note that common keywords and tokens such as `if` and `break` cannot be used in the middle of expressions. For complex logic, use [conditional and logical expressions](#condensing-conditionals) instead.
 
 After moving all the code out of a loop block, you may use a semicolon to convert the resulting empty block into an empty expression:
 
@@ -80,7 +80,7 @@ var i=0,l='ipsum',f
 Incidentally, this method fits in naturally into the `initial` expression of `for` loops since keywords like `var` cannot be used in sequence expressions.
 
 ## Condensing conditionals
-Most `if` statements can be condensed into plain expressions by using ternaries or logical operators, allowing you to use them in `for` loops.
+Most `if` statements can be condensed into conditional expressions or logical expressions, allowing you to use them in `for` loops.
 
 ```javascript
 // Generic `if` statement
@@ -100,7 +100,7 @@ if (condition) {
   alternate()
 }
 
-// ...becomes a "ternary expression":
+// ...becomes a "conditional expression":
 condition?consequent():alternate()
 ```
 
@@ -116,7 +116,7 @@ if (condition) {
 condition&&foo(),bar(),baz()
 ```
 
-## Other tips
+## Avoiding `Array` built-ins
 
 To fill up an array with values within a for loop, you can use the current iteration index `i` to set values directly instead of using `Array.push`.
 
