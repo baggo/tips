@@ -26,7 +26,8 @@ Unless `array.length` is constantly changing, it is preferable to cache it in a 
 // In this example, `array.length` is only accessed once
 for (var i = 0, max = array.length; i < max; i++) {
   // ...
-}```
+}
+```
 
 An even faster and more compact approach would be to loop backwards through the array:
 
