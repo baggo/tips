@@ -1,5 +1,5 @@
 # tips
-> Tips, hacks and guidelines for optimizing JavaScript modules
+> Tips and guidelines for optimizing JavaScript modules
 
 Above all else, `baggo` modules should prioritize being fast, compact and simple. Therefore, single variable names and minimal whitespace are  acceptable when writing `baggo`-style code.
 
