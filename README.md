@@ -156,4 +156,4 @@ x = 123, foo()
 (x = 123), foo()
 ```
 
-This can really help shorten your code a lot, if you can think of intuitive ways to use the assignments right.
+If you can think of intuitive ways to use the assignments, this can help shorten your code a lot.
