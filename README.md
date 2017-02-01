@@ -133,3 +133,27 @@ for(var r=[],i=v.length;i--;r[i]=FOO);return r
 ```
 
 This may or may not impact performance, but it usually just saves some space.
+
+## Using assignment values
+
+By wrapping an assignment into parens, or using them in conditionals, you can turn it into an expression and use the value being set.
+
+```js
+// This will evaluate `y - 2`:
+if (x = y - 2) foo()
+
+// Another example with parens:
+if ((z = p * p) > 10) bar()
+```
+
+Be careful using them inside sequence expressions, as the assignment operator takes precedence over a lot of others.
+
+```js
+// This will not work as you expect:
+x = 123, foo()
+
+// Wrap it in parens:
+(x = 123), foo()
+```
+
+This can really help shorten your code a lot, if you can think of intuitive ways to use the assignments right.
